@@ -3,3 +3,4 @@
 - Initial repository scaffold and project structure
 
 - Define RaceDay roles and system boundaries
+- Document assessment submission requirements
