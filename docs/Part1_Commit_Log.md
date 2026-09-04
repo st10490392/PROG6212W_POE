@@ -20,3 +20,4 @@
 - Add Enrolments and Results tables
 - Seed organisers and participants
 - Seed event and category data
+- Add Part 1 CI validation workflow
