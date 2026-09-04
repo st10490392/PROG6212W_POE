@@ -4,3 +4,4 @@
 
 - Define RaceDay roles and system boundaries
 - Document assessment submission requirements
+- Draft ERD entity list and relationships
