@@ -18,3 +18,4 @@
 - Add Users and EventTypes tables
 - Add Events and Categories tables
 - Add Enrolments and Results tables
+- Seed organisers and participants
