@@ -12,3 +12,4 @@
 - Plan user profile endpoints
 - Plan event management endpoints
 - Plan category management endpoints
+- Plan enrolment workflow endpoints
