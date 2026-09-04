@@ -1,0 +1,24 @@
+name: Part 1 Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-part1:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate required project files
+        run: |
+          test -f README.md
+          test -d docs
+          test -f docs/API_Endpoint_Plan.md
+          test -f docs/RaceDay_Database.sql
+          test -f docs/RaceDay_ERD.png
+          echo "Part 1 artifact validation passed."
