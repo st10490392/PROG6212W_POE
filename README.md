@@ -1,52 +1,50 @@
 # RaceDay – Programming 2B Part 1
 
-RaceDay is a planned full-stack event-management platform for South African road running, walking and cycling events. Part 1 documents the database model and API specification before implementation begins.
+RaceDay is a full-stack event-management platform for South African road running, walking, and cycling events. This repository contains the planning artifacts and database schema for Part 1 of the Portfolio of Evidence (PoE).
 
 ## Roles
 
-- **Organiser:** creates, edits and deletes events, manages categories, views enrolments for owned events and captures results.
-- **Participant:** creates an account, browses events, enters events by selecting a category, views personal enrolments and tracks personal results.
+- Organiser: creates, edits, and deletes events; manages categories; views event enrolments; captures results.
+- Participant: creates an account; browses events; selects a category and enrols; views personal enrolments and results.
 
-## Part 1 contents
+## Part 1 deliverables
 
-The `/docs` folder contains:
+The required files are stored in the docs folder:
 
-- `RaceDay_ERD.png` – Entity Relationship Diagram with keys, relationships and cardinality.
-- `API_Endpoint_Plan.md` – full endpoint planning table covering authentication, profile, events, categories, enrolments and results.
-- `RaceDay_Database.sql` – SQL Server schema, constraints and seed data.
+- `RaceDay_ERD.png` – Entity Relationship Diagram showing entities, keys, relationships, and cardinality.
+- `API_Endpoint_Plan.md` – planned RESTful API routes for authentication, profile, events, categories, enrolments, and results.
+- `RaceDay_Database.sql` – SQL Server schema with constraints and seeded sample data.
 
 ## Database design
 
-The ERD contains six entities: Users, EventTypes, Events, Categories, Enrolments and Results. The SQL script is designed to match this model exactly.
+The ERD includes the planned domain entities for the RaceDay system, including Users, EventTypes, Events, Categories, Enrolments, and Results. The SQL script is structured to align with that design and includes primary keys, foreign keys, uniqueness constraints, and validation rules.
 
 ## Running the SQL script
 
 1. Open SQL Server Management Studio (SSMS).
 2. Open `docs/RaceDay_Database.sql`.
-3. Execute the complete script on a SQL Server instance.
-4. Confirm that `RaceDayDB` is created and the verification queries return the seeded records.
+3. Execute the script against a clean SQL Server instance.
+4. Confirm that `RaceDayDB` is created and the seed queries return the sample organiser, participant, event, category, enrolment, and result records.
 
-The supplied seed password strings are demonstration values for Part 1 data only. Part 2 should generate and store the actual ASP.NET-compatible password hashes.
+The demo password values in the seed data are placeholders for Part 1 planning only. In Part 2, the application should store actual ASP.NET-compatible password hashes.
 
 ## GitHub / CI
 
-The Part 1 GitHub Actions workflow is stored in `.github/workflows/part1-validate.yml`. It validates the required repository structure and required planning files.
+The repository includes a GitHub Actions workflow in `.github/workflows/part1-validate.yml` to validate the existence of the required Part 1 artifacts.
 
-**CI screenshot:** `T
+CI screenshot: Add your successful GitHub Actions green build screenshot here.
 
 ## Video presentation
 
-**YouTube:** 
-
-The video should demonstrate the ERD, explain the endpoint planning decisions, and run the SQL script live in SSMS.
+YouTube link: Add your unlisted YouTube presentation link here.
 
 ## Student details
 
-- **Student name:*RIPFUMELO VUNENE NGOBENI* 
-- **Student number:*ST10490392*
-- **Module:** PROG6212 Programming 2B
-- **Assessment:** Part 1 – System Planning and Database
+- Student name: RIPFUMELO VUNENE NGOBENI
+- Student number: ST10490392
+- Module: PROG6212 Programming 2B
+- Assessment: Part 1 – System Planning and Database
 
 ## AI disclosure
 
-The assessment brief states that AI use for planning, proofreading or coding must be disclosed briefly, and that AI-generated code must not be submitted as the student's own work without the student's analysis, synthesis and critical thinking. Review, understand, test and adapt this material before using any of it in the submission, and include the required disclosure according to your institution's rules.
+AI tools may be used for planning, proofreading, or coding support only if the use is disclosed in line with the assessment rules. Any AI-generated content must be reviewed, understood, and adapted before submission, and must not be submitted as the student’s own work without their own analysis and critical thinking.
