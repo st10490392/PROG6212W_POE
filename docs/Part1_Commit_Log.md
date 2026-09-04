@@ -8,3 +8,4 @@
 - Finalize ERD cardinality and keys
 - Add ERD asset to docs
 - Create API planning overview
+- Plan authentication endpoints
