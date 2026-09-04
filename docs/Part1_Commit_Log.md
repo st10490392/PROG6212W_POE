@@ -6,3 +6,4 @@
 - Document assessment submission requirements
 - Draft ERD entity list and relationships
 - Finalize ERD cardinality and keys
+- Add ERD asset to docs
