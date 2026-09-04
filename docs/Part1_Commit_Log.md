@@ -19,3 +19,4 @@
 - Add Events and Categories tables
 - Add Enrolments and Results tables
 - Seed organisers and participants
+- Seed event and category data
