@@ -16,3 +16,4 @@
 - Plan results workflow endpoints
 - Create SQL schema baseline
 - Add Users and EventTypes tables
+- Add Events and Categories tables
