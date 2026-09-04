@@ -14,3 +14,4 @@
 - Plan category management endpoints
 - Plan enrolment workflow endpoints
 - Plan results workflow endpoints
+- Create SQL schema baseline
