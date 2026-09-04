@@ -9,3 +9,4 @@
 - Add ERD asset to docs
 - Create API planning overview
 - Plan authentication endpoints
+- Plan user profile endpoints
