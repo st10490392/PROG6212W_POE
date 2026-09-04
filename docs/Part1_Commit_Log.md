@@ -15,3 +15,4 @@
 - Plan enrolment workflow endpoints
 - Plan results workflow endpoints
 - Create SQL schema baseline
+- Add Users and EventTypes tables
