@@ -21,3 +21,4 @@
 - Seed organisers and participants
 - Seed event and category data
 - Add Part 1 CI validation workflow
+- Final Part 1 review and sign-off
