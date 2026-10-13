@@ -48,3 +48,9 @@ YouTube link: Add your unlisted YouTube presentation link here.
 ## AI disclosure
 
 AI tools may be used for planning, proofreading, or coding support only if the use is disclosed in line with the assessment rules. Any AI-generated content must be reviewed, understood, and adapted before submission, and must not be submitted as the student’s own work without their own analysis and critical thinking.
+
+---
+
+## Project status update — 13 October 2026
+
+RaceDay is academic event-management coursework. The documented ERD, SQL Server schema and API plan are planning deliverables; no production service or October 2026 launch is claimed.
