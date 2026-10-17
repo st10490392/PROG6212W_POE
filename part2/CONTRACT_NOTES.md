@@ -23,10 +23,14 @@ EF maps the Part 1 tables, columns, lengths, decimal/date/time types, unique ind
 
 The Part 1 database does not constrain a user's role through its foreign key or require the enrolment category's event ID to equal its event ID. The API enforces organiser/participant roles and category membership through services and controllers. It does not silently add a different composite key or trigger to the original schema. Direct writes outside the API must respect these business rules.
 
+The portable SQLite model uses `CURRENT_TIMESTAMP` and numeric casts in distance checks because SQLite stores EF decimal values as text. These test-provider adjustments do not change the SQL Server migration or establish SQL Server compatibility; the separate SQL Server suite applies the actual migration and checks native types.
+
 SQL Server cascade rules match Part 1. The API additionally refuses to delete events that have enrolments or categories already used by enrolments. Serializable write transactions keep these checks and writes together. Database unique/check/FK conflicts return a safe **409**. Unexpected errors return **500** without exception details; diagnostic details go to server logs.
 
 ## Authentication boundary
 
 ASP.NET Core cookie authentication uses a singleton server ticket store backed by memory cache. The random server key is protected in an HttpOnly, Secure, SameSite=Strict session cookie; user ID and role stay in the server ticket. Absolute lifetime is 30 minutes. Login rotates the current browser's session; logout removes its server ticket, so a copied old cookie cannot authenticate. Separate browser sessions remain independent. Restarting the API clears all sessions. This is a single-instance academic application; a shared ticket store would be required for multiple instances.
+
+For re-login, the controller revokes the ticket and obtains a fresh framework cookie handler before signing in. The [ASP.NET Core handler](https://github.com/dotnet/aspnetcore/blob/v10.0.0/src/Security/Authentication/Cookies/src/CookieAuthenticationHandler.cs) retains its session key after sign-out within the same request; reusing that handler would renew the revoked key. `AuthTests` checks that the replacement session works while the old cookie fails. Session lifetime is calculated by the cookie handler from the configured 30-minute lifetime, and a separate test clock verifies expiration without waiting.
 
 Use HTTPS and the Swagger UI served from the same API origin. Login in Swagger first; the browser automatically sends the session cookie on later requests. JavaScript cannot read the HttpOnly cookie. SameSite=Strict, JSON request bodies, no enabled CORS policy, and origin checks on unsafe methods protect browser writes. Requests with a foreign Origin or `Sec-Fetch-Site: cross-site` are rejected. Command-line clients may omit Origin but must keep the cookie jar.

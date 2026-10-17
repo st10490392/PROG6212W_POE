@@ -45,6 +45,8 @@ Run the test command and open the actual result report. `ValidationTests` are un
 
 `DatabaseTests` attempt invalid direct EF writes, proving relational constraints independently of controller validation. SQLite makes the portable tests easy to run, but its type/length behaviour differs from SQL Server. Setting `RACEDAY_TEST_SQLSERVER` reruns the entire suite against actual SQL Server databases using the real migration. `SqlServerTests` verifies SQL-specific storage and length behaviour. Never describe a skipped SQL test as passed.
 
+`AuthTests.Session_lifetime_uses_authentication_clock_and_expires_after_30_minutes` moves a separate session clock to prove expiry without sleeping. The re-login test proves that the new session works and the copied old cookie fails. The first real runs exposed an expiry-clock mismatch, retained re-login keys and a SQLite decimal check difference; fixes were committed and both CI jobs then passed. Be ready to explain how failing tests helped identify these defects.
+
 ## Suggested presentation order
 
 1. Identify the development branch and show preserved Part 1 documents.

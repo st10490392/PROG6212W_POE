@@ -112,6 +112,8 @@ For Express, keep the default or set the secret to the Express connection string
 
 EF migrations create a separate **RaceDayPart2** database with the six tables, constraints and Run/Walk/Cycle seeds. Register your own demonstration accounts through the API; no passwords or fake Part 1 hashes are seeded. The API does not silently migrate a database at startup. Inspect migrations before applying them.
 
+The [generated migration SQL](part2/RaceDay.Api/Data/Migrations/InitialCreate.sql) is included for schema review. Use `dotnet ef database update` for the normal setup above. To regenerate the review script from `part2`, run `dotnet ef migrations script --project RaceDay.Api --configuration Release --output RaceDay.Api/Data/Migrations/InitialCreate.sql`.
+
 Keep the Part 1 SQL script for the Part 1 demonstration. It drops/recreates its tables and must **not** be executed over the Part 2 EF database. Do not point EF at an existing Part 1 `RaceDayDB` and assume migration history exists.
 
 ## Launch and Swagger
@@ -165,6 +167,7 @@ Use a local test instance and an account allowed to create databases. Each test 
 The [Part 2 workflow](.github/workflows/part2-api.yml) restores, builds and tests on Ubuntu with SQLite and on Windows with real SQL Server LocalDB. Both jobs retain TRX results, and failures fail the workflow. The [Part 1 workflow](.github/workflows/part1-validate.yml) is preserved.
 
 - [Part 2 workflow runs](https://github.com/st10490392/PROG6212W_POE/actions/workflows/part2-api.yml): see GitHub for the actual run status.
+- Verified on 17 October 2026 at implementation commit `2bb1dde`: [passing Part 2 run](https://github.com/st10490392/PROG6212W_POE/actions/runs/39021185258). SQLite: **104 passed, 2 SQL-only tests skipped**. Real SQL Server LocalDB: **106 passed, 0 skipped**. Both Release builds had zero warnings and errors.
 - CI screenshot placeholder: **capture and add the actual passing Part 2 run after verification**.
 - Swagger screenshot placeholder: **capture authenticated event creation and participant enrolment**.
 - Database screenshot placeholder: **capture the EF-created tables and example relationships in SSMS**.
