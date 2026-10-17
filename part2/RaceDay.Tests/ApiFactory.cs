@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
@@ -41,6 +42,9 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
             services.RemoveAll<IDbContextOptionsConfiguration<RaceDayDbContext>>();
             services.RemoveAll<TimeProvider>();
             services.AddSingleton<TimeProvider>(Clock);
+            // Event tests advance business time by days. Authentication uses real elapsed time.
+            services.PostConfigure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme,
+                options => options.TimeProvider = TimeProvider.System);
             if (UsesSqlServer)
             {
                 var settings = new SqlConnectionStringBuilder(sqlServer!) { InitialCatalog = DatabaseName };

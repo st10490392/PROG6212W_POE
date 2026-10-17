@@ -44,7 +44,7 @@ public class ValidationTests
     [InlineData("00:00:01.5", false)]
     public void Finish_time_respects_SQL_Server_time_range_and_second_precision(string time, bool valid)
     {
-        var request = new ResultRequest { FinishTime = TimeSpan.Parse(time), FinishingPosition = 1 };
+        var request = new ResultRequest { FinishTime = TimeSpan.Parse(time, System.Globalization.CultureInfo.InvariantCulture), FinishingPosition = 1 };
         Assert.Equal(valid, Validator.TryValidateObject(request, new ValidationContext(request), [], true));
     }
 

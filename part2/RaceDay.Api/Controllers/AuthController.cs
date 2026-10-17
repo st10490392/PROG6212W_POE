@@ -54,7 +54,8 @@ public class AuthController(RaceDayDbContext db, IPasswordHasher<User> hasher, P
         ], CookieAuthenticationDefaults.AuthenticationScheme));
         await HttpContext.SignInAsync(principal, new AuthenticationProperties
         {
-            IsPersistent = false, ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30), AllowRefresh = false
+            // The cookie handler applies Program.cs's 30-minute lifetime using its own clock.
+            IsPersistent = false, AllowRefresh = false
         });
         return Ok(Responses.Profile(user));
     }
