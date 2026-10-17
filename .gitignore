@@ -4,3 +4,13 @@
 *.jpeg
 *.log
 .DS_Store
+**/bin/
+**/obj/
+**/TestResults/
+.tools/
+.vs/
+*.user
+*.suo
+**/appsettings.Local.json
+**/appsettings.*.local.json
+.env
