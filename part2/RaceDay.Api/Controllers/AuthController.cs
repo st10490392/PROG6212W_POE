@@ -47,7 +47,7 @@ public class AuthController(RaceDayDbContext db, IPasswordHasher<User> hasher, P
             await db.SaveChangesAsync();
         }
         // Re-login revokes the old browser session before issuing a fresh session key.
-        await HttpContext.SignOutAsync();
+        if (User.Identity?.IsAuthenticated == true) await HttpContext.SignOutAsync();
         var principal = new ClaimsPrincipal(new ClaimsIdentity([
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new Claim(ClaimTypes.Role, user.Role), new Claim(ClaimTypes.Name, user.Email)
