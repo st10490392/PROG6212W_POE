@@ -5,6 +5,35 @@ namespace RaceDay.Tests;
 
 public class EventTests
 {
+    [Theory]
+    [InlineData(400)]
+    [InlineData(600)]
+    public async Task Create_and_update_responses_match_persisted_event_date_precision(int milliseconds)
+    {
+        await using var app = new ApiFactory();
+        using var owner = await app.Actor();
+        var created = await owner.PostAsJsonAsync("/api/events", app.EventBody(date: app.Clock.Now.AddDays(1).AddMilliseconds(milliseconds)));
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+        var createdJson = await ApiFactory.Json(created);
+        var route = $"/api/events/{createdJson.GetProperty("eventId").GetInt32()}";
+        var read = await owner.GetAsync(route);
+        Assert.Equal(HttpStatusCode.OK, read.StatusCode);
+        var createdDate = createdJson.GetProperty("eventDate").GetDateTimeOffset();
+        Assert.Equal(createdDate, (await ApiFactory.Json(read)).GetProperty("eventDate").GetDateTimeOffset());
+
+        var updated = await owner.PutAsJsonAsync(route, app.EventBody(date: app.Clock.Now.AddDays(2).AddMilliseconds(milliseconds)));
+        Assert.Equal(HttpStatusCode.OK, updated.StatusCode);
+        var updatedDate = (await ApiFactory.Json(updated)).GetProperty("eventDate").GetDateTimeOffset();
+        var reread = await owner.GetAsync(route);
+        Assert.Equal(HttpStatusCode.OK, reread.StatusCode);
+        Assert.Equal(updatedDate, (await ApiFactory.Json(reread)).GetProperty("eventDate").GetDateTimeOffset());
+        if (app.UsesSqlServer)
+        {
+            Assert.Equal(0L, createdDate.Ticks % TimeSpan.TicksPerSecond);
+            Assert.Equal(0L, updatedDate.Ticks % TimeSpan.TicksPerSecond);
+        }
+    }
+
     [Fact]
     public async Task Organiser_creates_reads_updates_and_deletes_own_event()
     {

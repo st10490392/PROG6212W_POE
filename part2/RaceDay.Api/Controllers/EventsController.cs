@@ -48,6 +48,8 @@ public class EventsController(RaceDayDbContext db, AccessService access, TimePro
         Apply(race, request);
         db.Events.Add(race);
         await db.SaveChangesAsync();
+        // SQL Server rounds datetime2(0); return the persisted values, not the input's fractional seconds.
+        await db.Entry(race).ReloadAsync();
         await db.Entry(race).Reference(x => x.EventType).LoadAsync();
         return CreatedAtAction(nameof(GetOne), new { eventId = race.EventId }, Responses.Event(race));
     }
@@ -59,6 +61,7 @@ public class EventsController(RaceDayDbContext db, AccessService access, TimePro
         await ValidateType(request.EventTypeId);
         Apply(race, request);
         await db.SaveChangesAsync();
+        await db.Entry(race).ReloadAsync();
         await db.Entry(race).Reference(x => x.EventType).LoadAsync();
         return Ok(Responses.Event(race));
     }
