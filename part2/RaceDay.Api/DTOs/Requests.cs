@@ -48,7 +48,7 @@ public class EventRequest : IValidatableObject
     [Required, StringLength(1000)] public string Description { get; set; } = "";
     public DateTimeOffset EventDate { get; set; }
     [Required, StringLength(200)] public string Location { get; set; } = "";
-    [Range(typeof(decimal), "0.01", "9999.99")] public decimal DistanceKm { get; set; }
+    [Range(typeof(decimal), "0.01", "9999.99", ParseLimitsInInvariantCulture = true, ConvertValueInInvariantCulture = true)] public decimal DistanceKm { get; set; }
     [Range(1, int.MaxValue)] public int EventTypeId { get; set; }
     public IEnumerable<ValidationResult> Validate(ValidationContext context)
     {
@@ -64,7 +64,7 @@ public class CategoryRequest : IValidatableObject
     [Required, StringLength(100)] public string Name { get; set; } = "";
     public int? MinAge { get; set; }
     public int? MaxAge { get; set; }
-    [Range(typeof(decimal), "0.01", "9999.99")] public decimal? DistanceKm { get; set; }
+    [Range(typeof(decimal), "0.01", "9999.99", ParseLimitsInInvariantCulture = true, ConvertValueInInvariantCulture = true)] public decimal? DistanceKm { get; set; }
     public IEnumerable<ValidationResult> Validate(ValidationContext context)
     {
         if (CategoryType == "Age" && (MinAge is null || MaxAge is null || MinAge < 0 || MaxAge < MinAge))
