@@ -89,7 +89,7 @@ $env:DOTNET_ROOT = (Resolve-Path .tools/dotnet).Path
 $env:PATH = "$env:DOTNET_ROOT;$env:PATH"
 ```
 
-For a fresh clone, install the .NET 10 SDK using Microsoft's standard installer. Tool/package restores need internet access. The RaceDay API and all automated tests are C#; no Python installation is required to build, run or test the project.
+For a fresh clone, install the .NET 10 SDK using Microsoft's standard installer. Tool/package restores need internet access. The RaceDay API and `dotnet test` suite are C#; Python is not required to build, run or execute that suite. The optional live acceptance runner described below uses Python.
 
 ## SQL Server and EF Core setup
 
@@ -167,7 +167,7 @@ Use a local test instance and an account allowed to create databases. Each test 
 The [Part 2 workflow](.github/workflows/part2-api.yml) restores, builds and tests on Ubuntu with SQLite and on Windows with real SQL Server LocalDB. Both jobs retain TRX results, and failures fail the workflow. The [Part 1 workflow](.github/workflows/part1-validate.yml) is preserved.
 
 - [Part 2 workflow runs](https://github.com/st10490392/PROG6212W_POE/actions/workflows/part2-api.yml): see GitHub for the actual run status.
-- Verified on 17 October 2026 at implementation commit `2bb1dde`: [passing Part 2 run](https://github.com/st10490392/PROG6212W_POE/actions/runs/39021185258). SQLite: **104 passed, 2 SQL-only tests skipped**. Real SQL Server LocalDB: **106 passed, 0 skipped**. Both Release builds had zero warnings and errors.
+- Verified on 17 October 2026 at implementation commit `bda6c7a`: [passing Part 2 run](https://github.com/st10490392/PROG6212W_POE/actions/runs/39042245274). SQLite: **107 passed, 2 SQL-only tests skipped**. Real SQL Server LocalDB: **109 passed, 0 skipped**. Both Release builds had zero warnings and errors. See the [acceptance report](part2/ACCEPTANCE_REPORT.md) for separate local SQL Server Express and real HTTPS evidence.
 - CI screenshot placeholder: **capture and add the actual passing Part 2 run after verification**.
 - Swagger screenshot placeholder: **capture authenticated event creation and participant enrolment**.
 - Database screenshot placeholder: **capture the EF-created tables and example relationships in SSMS**.
@@ -178,3 +178,34 @@ The [Part 2 workflow](.github/workflows/part2-api.yml) restores, builds and test
 OpenAI Codex assisted with API implementation, tests, CI configuration and documentation. AI assistance is identified in the implementation commits. The student must review, understand and adapt this work, verify the actual test/CI evidence, and explain the design independently before submission. The generated implementation is not presented as exclusively human-authored work. No passing CI image, presentation recording or video URL is invented.
 
 See [the presentation guide](part2/PRESENTATION_GUIDE.md) for concrete code examples to demonstrate, and [the verification report](part2/VERIFICATION_REPORT.md) for actual results and remaining limitations.
+
+
+## Final Part 2 acceptance verification
+
+See [the acceptance report](part2/ACCEPTANCE_REPORT.md) for the actual local HTTP, database and test results, separate from GitHub-hosted CI. A running service or open Swagger page alone is not evidence of a completed acceptance scenario.
+
+The repeatable C# acceptance test creates isolated Organiser/Participant sessions, creates an event with Age and Distance categories, enrols a Participant, checks forbidden ownership operations leave stored data unchanged, captures and corrects results, and verifies logout. From `part2`:
+
+```powershell
+dotnet test RaceDay.slnx --configuration Release --filter FullyQualifiedName~AcceptanceTests --logger 'console;verbosity=detailed' --logger trx --results-directory TestResults/AcceptanceScenario
+```
+
+Set `RACEDAY_TEST_SQLSERVER` as documented above to run this test and the full suite against SQL Server Express. Without it, the portable tests use SQLite.
+
+For a real HTTPS scenario against a **local demonstration database**, an optional [live verification runner](part2/scripts/acceptance_http.py) uses Python 3.10+ (standard library only) and Microsoft's `sqlcmd`, both on PATH:
+
+```powershell
+cd part2
+python scripts/acceptance_http.py --base-url https://localhost:7142 --database RaceDayPart2
+```
+
+Python is optional verification tooling; the application and automated integration tests remain C#/.NET. Use the database actually configured for the running API. The runner permits only HTTPS loopback URLs and local SQL instances, accepts the local development certificate for that run, keeps credentials/cookies in memory, and writes sanitized evidence to ignored `TestResults/acceptance-http.json`. It uses fresh synthetic accounts and cleans only their verified demo data in a SQL transaction. A failed request, assertion or cleanup produces a nonzero exit code. See the report for cleanup limitations and the actual outcome.
+
+**Student evidence placeholders: still to be supplied personally**
+
+- **[PLACEHOLDER: actual Swagger screenshots]** Registration/login, event and both category types, Participant enrolment, 401/403/409 responses, and result capture/correction.
+- **[PLACEHOLDER: actual SSMS screenshots]** The configured Part 2 database, `__EFMigrationsHistory`, six domain tables and relationships, with unrelated private records hidden.
+- **[PLACEHOLDER: actual test/Actions screenshots]** Local suite output and a passing Part 2 Actions run for the submitted revision.
+- **[PLACEHOLDER: student's narrated video URL]** A real unlisted recording in which the student demonstrates the API and explains the C# implementation, ownership checks, database constraints and test evidence.
+
+Do not include cookie values, passwords, connection secrets or real personal information in screenshots or the video. Image files are ignored by the current repository rules; deliberately add reviewed coursework screenshots with `git add -f <chosen-screenshot-path>` when ready. No placeholder is a claim that a screenshot or recording already exists.

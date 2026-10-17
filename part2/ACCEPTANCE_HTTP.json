@@ -1,0 +1,608 @@
+{
+  "startedUtc": "2026-10-17T15:20:09.558429+00:00",
+  "baseUrl": "https://localhost:7142",
+  "demoRunId": "5cb0b32d6b7940f08cb1da67552b38bf",
+  "transport": "real HTTPS / Kestrel",
+  "checks": [
+    {
+      "operation": "Swagger UI",
+      "method": "GET",
+      "path": "/swagger/index.html",
+      "status": 200,
+      "response": null,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "event types",
+      "method": "GET",
+      "path": "/api/event-types",
+      "status": 200,
+      "response": [
+        {
+          "eventTypeId": 1,
+          "name": "Run"
+        },
+        {
+          "eventTypeId": 2,
+          "name": "Walk"
+        },
+        {
+          "eventTypeId": 3,
+          "name": "Cycle"
+        }
+      ],
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "register Organiser",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 201,
+      "response": {
+        "userId": 4,
+        "role": "Organiser"
+      },
+      "expected": 201,
+      "passed": true
+    },
+    {
+      "operation": "registration does not authenticate",
+      "method": "GET",
+      "path": "/api/users/me",
+      "status": 401,
+      "response": null,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "operation": "login Organiser",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "response": {
+        "userId": 4,
+        "role": "Organiser"
+      },
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "register Organiser",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 201,
+      "response": {
+        "userId": 5,
+        "role": "Organiser"
+      },
+      "expected": 201,
+      "passed": true
+    },
+    {
+      "operation": "registration does not authenticate",
+      "method": "GET",
+      "path": "/api/users/me",
+      "status": 401,
+      "response": null,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "operation": "login Organiser",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "response": {
+        "userId": 5,
+        "role": "Organiser"
+      },
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "register Participant",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 201,
+      "response": {
+        "userId": 6,
+        "role": "Participant"
+      },
+      "expected": 201,
+      "passed": true
+    },
+    {
+      "operation": "registration does not authenticate",
+      "method": "GET",
+      "path": "/api/users/me",
+      "status": 401,
+      "response": null,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "operation": "login Participant",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "response": {
+        "userId": 6,
+        "role": "Participant"
+      },
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "invalid credentials",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 401,
+      "response": {
+        "title": "Invalid email or password.",
+        "status": 401
+      },
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "operation": "invalid credentials do not authenticate",
+      "method": "GET",
+      "path": "/api/users/me",
+      "status": 401,
+      "response": null,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "operation": "create event",
+      "method": "POST",
+      "path": "/api/events",
+      "status": 201,
+      "response": {
+        "eventId": 2,
+        "organiserId": 4,
+        "eventTypeId": 1,
+        "name": "Acceptance 5cb0b32d6b7940f08cb1da67552b38bf",
+        "eventDate": "2026-10-19T15:20:47Z",
+        "distanceKm": 10,
+        "categories": []
+      },
+      "expected": 201,
+      "passed": true
+    },
+    {
+      "operation": "create Distance category",
+      "method": "POST",
+      "path": "/api/events/2/categories",
+      "status": 201,
+      "response": {
+        "categoryId": 3,
+        "eventId": 2,
+        "categoryType": "Distance",
+        "name": "10km Open",
+        "minAge": null,
+        "maxAge": null,
+        "distanceKm": 10
+      },
+      "expected": 201,
+      "passed": true
+    },
+    {
+      "operation": "create Age category",
+      "method": "POST",
+      "path": "/api/events/2/categories",
+      "status": 201,
+      "response": {
+        "categoryId": 4,
+        "eventId": 2,
+        "categoryType": "Age",
+        "name": "Adults",
+        "minAge": 18,
+        "maxAge": 80,
+        "distanceKm": null
+      },
+      "expected": 201,
+      "passed": true
+    },
+    {
+      "operation": "enrol participant",
+      "method": "POST",
+      "path": "/api/events/2/enrolments",
+      "status": 201,
+      "response": {
+        "enrolmentId": 2,
+        "eventId": 2,
+        "participantId": 6,
+        "eventDate": "2026-10-19T15:20:47Z",
+        "categoryId": 3,
+        "enrolmentStatus": "Confirmed"
+      },
+      "expected": 201,
+      "passed": true
+    },
+    {
+      "operation": "duplicate enrolment",
+      "method": "POST",
+      "path": "/api/events/2/enrolments",
+      "status": 409,
+      "response": {
+        "title": "You are already enrolled in this event.",
+        "status": 409
+      },
+      "expected": 409,
+      "passed": true
+    },
+    {
+      "operation": "participant cannot modify event",
+      "method": "PUT",
+      "path": "/api/events/2",
+      "status": 403,
+      "response": null,
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "participant cannot delete event",
+      "method": "DELETE",
+      "path": "/api/events/2",
+      "status": 403,
+      "response": null,
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "other organiser cannot modify event",
+      "method": "PUT",
+      "path": "/api/events/2",
+      "status": 403,
+      "response": {
+        "title": "This event belongs to another organiser.",
+        "status": 403
+      },
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "other organiser cannot delete event",
+      "method": "DELETE",
+      "path": "/api/events/2",
+      "status": 403,
+      "response": {
+        "title": "This event belongs to another organiser.",
+        "status": 403
+      },
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "other organiser cannot modify category",
+      "method": "PUT",
+      "path": "/api/categories/3",
+      "status": 403,
+      "response": {
+        "title": "This event belongs to another organiser.",
+        "status": 403
+      },
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "other organiser cannot delete unused category",
+      "method": "DELETE",
+      "path": "/api/categories/4",
+      "status": 403,
+      "response": {
+        "title": "This event belongs to another organiser.",
+        "status": 403
+      },
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "other organiser cannot read enrolments",
+      "method": "GET",
+      "path": "/api/events/2/enrolments",
+      "status": 403,
+      "response": {
+        "title": "This event belongs to another organiser.",
+        "status": 403
+      },
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "other organiser cannot read results",
+      "method": "GET",
+      "path": "/api/events/2/results",
+      "status": 403,
+      "response": {
+        "title": "This event belongs to another organiser.",
+        "status": 403
+      },
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "event unchanged after denied writes",
+      "method": "GET",
+      "path": "/api/events/2",
+      "status": 200,
+      "response": {
+        "eventId": 2,
+        "organiserId": 4,
+        "eventTypeId": 1,
+        "name": "Acceptance 5cb0b32d6b7940f08cb1da67552b38bf",
+        "eventDate": "2026-10-19T15:20:47Z",
+        "distanceKm": 10.0,
+        "categories": [
+          {
+            "categoryId": 3,
+            "eventId": 2,
+            "categoryType": "Distance",
+            "name": "10km Open",
+            "minAge": null,
+            "maxAge": null,
+            "distanceKm": 10.0
+          },
+          {
+            "categoryId": 4,
+            "eventId": 2,
+            "categoryType": "Age",
+            "name": "Adults",
+            "minAge": 18,
+            "maxAge": 80,
+            "distanceKm": null
+          }
+        ]
+      },
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "owner reads enrolments",
+      "method": "GET",
+      "path": "/api/events/2/enrolments",
+      "status": 200,
+      "response": [
+        {
+          "enrolmentId": 2,
+          "eventId": 2,
+          "participantId": 6,
+          "eventDate": "2026-10-19T15:20:47Z",
+          "categoryId": 3,
+          "enrolmentStatus": "Confirmed"
+        }
+      ],
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "result before start",
+      "method": "POST",
+      "path": "/api/enrolments/2/result",
+      "status": 409,
+      "response": {
+        "title": "Results cannot be recorded before the event starts.",
+        "status": 409
+      },
+      "expected": 409,
+      "passed": true
+    },
+    {
+      "operation": "move demo event start into past",
+      "method": "PUT",
+      "path": "/api/events/2",
+      "status": 200,
+      "response": {
+        "eventId": 2,
+        "organiserId": 4,
+        "eventTypeId": 1,
+        "name": "Acceptance 5cb0b32d6b7940f08cb1da67552b38bf",
+        "eventDate": "2026-10-16T15:20:57Z",
+        "distanceKm": 10,
+        "categories": [
+          {
+            "categoryId": 3,
+            "eventId": 2,
+            "categoryType": "Distance",
+            "name": "10km Open",
+            "minAge": null,
+            "maxAge": null,
+            "distanceKm": 10.0
+          },
+          {
+            "categoryId": 4,
+            "eventId": 2,
+            "categoryType": "Age",
+            "name": "Adults",
+            "minAge": 18,
+            "maxAge": 80,
+            "distanceKm": null
+          }
+        ]
+      },
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "participant cannot record result",
+      "method": "POST",
+      "path": "/api/enrolments/2/result",
+      "status": 403,
+      "response": null,
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "other organiser cannot record result",
+      "method": "POST",
+      "path": "/api/enrolments/2/result",
+      "status": 403,
+      "response": {
+        "title": "This event belongs to another organiser.",
+        "status": 403
+      },
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "owner records result",
+      "method": "POST",
+      "path": "/api/enrolments/2/result",
+      "status": 201,
+      "response": {
+        "resultId": 1,
+        "enrolmentId": 2,
+        "participantId": 6,
+        "eventId": 2,
+        "eventDate": "2026-10-16T15:20:57Z",
+        "categoryId": 3,
+        "finishTime": "00:52:18",
+        "finishingPosition": 47
+      },
+      "expected": 201,
+      "passed": true
+    },
+    {
+      "operation": "duplicate result",
+      "method": "POST",
+      "path": "/api/enrolments/2/result",
+      "status": 409,
+      "response": {
+        "title": "A result is already recorded.",
+        "status": 409
+      },
+      "expected": 409,
+      "passed": true
+    },
+    {
+      "operation": "other organiser cannot correct result",
+      "method": "PUT",
+      "path": "/api/results/1",
+      "status": 403,
+      "response": {
+        "title": "This event belongs to another organiser.",
+        "status": 403
+      },
+      "expected": 403,
+      "passed": true
+    },
+    {
+      "operation": "result unchanged after denied correction",
+      "method": "GET",
+      "path": "/api/events/2/results",
+      "status": 200,
+      "response": [
+        {
+          "resultId": 1,
+          "enrolmentId": 2,
+          "participantId": 6,
+          "eventId": 2,
+          "eventDate": "2026-10-16T15:20:57Z",
+          "categoryId": 3,
+          "finishTime": "00:52:18",
+          "finishingPosition": 47
+        }
+      ],
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "owner corrects result",
+      "method": "PUT",
+      "path": "/api/results/1",
+      "status": 200,
+      "response": {
+        "resultId": 1,
+        "enrolmentId": 2,
+        "participantId": 6,
+        "eventId": 2,
+        "eventDate": "2026-10-16T15:20:57Z",
+        "categoryId": 3,
+        "finishTime": "00:51:59",
+        "finishingPosition": 46
+      },
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "participant reads corrected history",
+      "method": "GET",
+      "path": "/api/users/me/results",
+      "status": 200,
+      "response": [
+        {
+          "resultId": 1,
+          "enrolmentId": 2,
+          "participantId": 6,
+          "eventId": 2,
+          "eventDate": "2026-10-16T15:20:57Z",
+          "categoryId": 3,
+          "finishTime": "00:51:59",
+          "finishingPosition": 46
+        }
+      ],
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "operation": "logout",
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "status": 204,
+      "response": null,
+      "expected": 204,
+      "passed": true
+    },
+    {
+      "operation": "protected profile after logout",
+      "method": "GET",
+      "path": "/api/users/me",
+      "status": 401,
+      "response": null,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "operation": "logout",
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "status": 204,
+      "response": null,
+      "expected": 204,
+      "passed": true
+    },
+    {
+      "operation": "protected profile after logout",
+      "method": "GET",
+      "path": "/api/users/me",
+      "status": 401,
+      "response": null,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "operation": "logout",
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "status": 204,
+      "response": null,
+      "expected": 204,
+      "passed": true
+    },
+    {
+      "operation": "protected profile after logout",
+      "method": "GET",
+      "path": "/api/users/me",
+      "status": 401,
+      "response": null,
+      "expected": 401,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "cleanup": "verified: removed 3 synthetic users and their demo event data",
+  "finishedUtc": "2026-10-17T15:21:01.486238+00:00"
+}
