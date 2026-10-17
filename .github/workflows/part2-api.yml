@@ -25,11 +25,13 @@ jobs:
       - run: dotnet restore RaceDay.slnx
       - run: dotnet build RaceDay.slnx --no-restore --configuration Release
       - run: dotnet test RaceDay.slnx --no-build --configuration Release --logger trx --results-directory TestResults
+      - name: Capture sanitized acceptance transcript
+        run: dotnet test RaceDay.slnx --no-build --configuration Release --filter FullyQualifiedName~AcceptanceTests --logger "console;verbosity=detailed" --logger trx --results-directory TestResults/Acceptance
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: portable-test-results
-          path: part2/TestResults/*.trx
+          path: part2/TestResults/**/*.trx
           if-no-files-found: warn
 
   sql-server-tests:
@@ -62,9 +64,11 @@ jobs:
       - run: dotnet build RaceDay.slnx --no-restore --configuration Release
       - name: Run complete suite against real SQL Server
         run: dotnet test RaceDay.slnx --no-build --configuration Release --logger trx --results-directory TestResults
+      - name: Capture sanitized acceptance transcript
+        run: dotnet test RaceDay.slnx --no-build --configuration Release --filter FullyQualifiedName~AcceptanceTests --logger "console;verbosity=detailed" --logger trx --results-directory TestResults/Acceptance
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: sql-server-test-results
-          path: part2/TestResults/*.trx
+          path: part2/TestResults/**/*.trx
           if-no-files-found: warn
