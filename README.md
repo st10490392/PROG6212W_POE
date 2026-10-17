@@ -164,11 +164,9 @@ Use a local test instance and an account allowed to create databases. Each test 
 The [Part 2 workflow](.github/workflows/part2-api.yml) restores, builds and tests on Ubuntu with SQLite and on Windows with real SQL Server LocalDB. Both jobs retain TRX results, and failures fail the workflow. The [Part 1 workflow](.github/workflows/part1-validate.yml) is preserved.
 
 - [Part 2 workflow runs](https://github.com/st10490392/PROG6212W_POE/actions/workflows/part2-api.yml): see GitHub for the actual run status.
-- Verified on 17 October 2026 at implementation commit `bda6c7a`: [passing Part 2 run](https://github.com/st10490392/PROG6212W_POE/actions/runs/39042245274). SQLite: **107 passed, 2 SQL-only tests skipped**. Real SQL Server LocalDB: **109 passed, 0 skipped**. Both Release builds had zero warnings and errors. See the [acceptance report](part2/ACCEPTANCE_REPORT.md) for separate local SQL Server Express and real HTTPS evidence.
-- CI screenshot placeholder: **capture and add the actual passing Part 2 run after verification**.
-- Swagger screenshot placeholder: **capture authenticated event creation and participant enrolment**.
-- Database screenshot placeholder: **capture the EF-created tables and example relationships in SSMS**.
-- Demonstration-video placeholder: **add the student's actual unlisted presentation URL**.
+- Verified on 17 October 2026 at final verified branch commit `2b8d4c3`: [passing Part 2 run](https://github.com/st10490392/PROG6212W_POE/actions/runs/39046123778). SQLite: **107 passed, 2 SQL-only tests skipped**. Real SQL Server LocalDB: **109 passed, 0 skipped**. Both Release builds had zero warnings and errors. See the [acceptance report](part2/ACCEPTANCE_REPORT.md) for separate local SQL Server Express and real HTTPS evidence.
+- [Final local acceptance report](part2/ACCEPTANCE_REPORT.md): 109 SQL Server Express tests passed, 0 failed/skipped; 44 live HTTPS and data-integrity checks passed.
+- Student screenshots and narrated video: see the evidence section below. An earlier Swagger 400/401 example is not evidence of a successful account registration.
 
 ## Academic integrity and AI-assistance disclosure
 
@@ -198,11 +196,12 @@ python scripts/acceptance_http.py --base-url https://localhost:7142 --database R
 
 Python is optional verification tooling; the application and automated integration tests remain C#/.NET. Use the database actually configured for the running API. The runner permits only HTTPS loopback URLs and local SQL instances, accepts the local development certificate for that run, keeps credentials/cookies in memory, and writes sanitized evidence to ignored `TestResults/acceptance-http.json`. It uses fresh synthetic accounts and cleans only their verified demo data in a SQL transaction. A failed request, assertion or cleanup produces a nonzero exit code. See the report for cleanup limitations and the actual outcome.
 
-**Student evidence placeholders: still to be supplied personally**
+**Student visual evidence** — Screenshots taken locally on 17 October 2026 are being prepared for upload under `docs/evidence/`. The uploaded PowerShell and Swagger images capture earlier local testing; final passing test and HTTPS outcomes are independently documented in the acceptance report and linked CI run. Until the image files are uploaded, the screenshot gallery is pending.
 
 - **[PLACEHOLDER: actual Swagger screenshots]** Registration/login, event and both category types, Participant enrolment, 401/403/409 responses, and result capture/correction.
 - **[PLACEHOLDER: actual SSMS screenshots]** The configured Part 2 database, `__EFMigrationsHistory`, six domain tables and relationships, with unrelated private records hidden.
-- **[PLACEHOLDER: actual test/Actions screenshots]** Local suite output and a passing Part 2 Actions run for the submitted revision.
+- **[CURRENT LOCAL TEST CAPTURE]** PowerShell showed 104 passed, 2 SQL-only skipped, and SQL Express running. The later final acceptance report records 109 passed on SQL Server Express, with no skips.
+- **[VERIFIED ACTIONS RUN]** [Successful Part 2 workflow](https://github.com/st10490392/PROG6212W_POE/actions/runs/39046123778) (Ubuntu and Windows SQL Server jobs). Add a screenshot of this *final* run if required.
 - **[PLACEHOLDER: student's narrated video URL]** A real unlisted recording in which the student demonstrates the API and explains the C# implementation, ownership checks, database constraints and test evidence.
 
 Do not include cookie values, passwords, connection secrets or real personal information in screenshots or the video. Image files are ignored by the current repository rules; deliberately add reviewed coursework screenshots with `git add -f <chosen-screenshot-path>` when ready. No placeholder is a claim that a screenshot or recording already exists.
