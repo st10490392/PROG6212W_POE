@@ -8,6 +8,7 @@ The supplied repository does not contain the referenced `PROG6212W.pdf` handout.
 
 - `GET /api/events?eventTypeId=1&date=2030-06-02` filters upcoming events by type ID and a UTC calendar day. Events at or before the current time are excluded. GET by ID can still retrieve past events.
 - Send `eventDate` as ISO 8601 with an explicit offset, for example `2030-06-02T07:00:00+02:00`. The API converts it to UTC for `datetime2(0)` storage and labels response timestamps with `Z`. For an offset-free JSON timestamp, .NET treats it using the server's local timezone; always supply the offset for portable behaviour.
+- SQL Server stores event dates at whole-second precision and rounds fractional seconds. Create/update responses reload the saved values so their dates match a subsequent GET. Regression tests cover rounding both down and up; the portable SQLite provider retains its own date precision.
 - `finishTime` is a JSON string such as `"00:52:18"`. SQL `TIME(0)` permits zero through 23:59:59; fractional seconds, negative durations and durations of 24 hours or more are rejected.
 - A start date is available, but no end date exists. Result writes return **409** before the start. The organiser remains responsible for confirming the race has finished. There is no separate publish flag: captured results appear in the planned owner-only event result list and the participant's own history.
 - Creating an enrolment at/after the event start also returns **409**, consistent with the documented before-event update/cancellation window.
