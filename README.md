@@ -19,7 +19,7 @@ The required files are stored in the docs folder:
 
 The ERD includes the planned domain entities for the RaceDay system, including Users, EventTypes, Events, Categories, Enrolments, and Results. The SQL script is structured to align with that design and includes primary keys, foreign keys, uniqueness constraints, and validation rules.
 
-## Running the SQL script
+## Part 1 SQL script (planning deliverable)
 
 1. Open SQL Server Management Studio (SSMS).
 2. Open `docs/RaceDay_Database.sql`.
@@ -28,15 +28,13 @@ The ERD includes the planned domain entities for the RaceDay system, including U
 
 The demo password values in the seed data are placeholders for Part 1 planning only. In Part 2, the application should store actual ASP.NET-compatible password hashes.
 
-## GitHub / CI
+## Part 1 GitHub Actions
 
-The repository includes a GitHub Actions workflow in `.github/workflows/part1-validate.yml` to validate the existence of the required Part 1 artifacts.
+The repository includes `.github/workflows/part1-validate.yml` to validate the required Part 1 artifacts. Part 2 CI and evidence are documented below.
 
-CI screenshot: Add your successful GitHub Actions green build screenshot here.
+## Presentation evidence
 
-## Video presentation
-
-YouTube link: Add your unlisted YouTube presentation link here.
+The student's narrated presentation link and authentic screenshots must be added before final submission; see the Part 2 evidence section below.
 
 ## Student details
 
@@ -44,7 +42,7 @@ YouTube link: Add your unlisted YouTube presentation link here.
 - Student number: ST10490392
 - Module: PROG6212 Programming 2B
 - Assessment: Part 1 – System Planning and Database
-- Current development: Part 2 – RESTful API, on `feature/part2-raceday-api`
+- Assessment: Part 1 – System Planning and Database; Part 2 – RESTful API Implementation
 
 ## AI disclosure
 
@@ -75,7 +73,6 @@ Install Git, the **.NET 10 SDK**, and **SQL Server Express, Developer edition or
 ```powershell
 git clone https://github.com/st10490392/PROG6212W_POE.git
 cd PROG6212W_POE
-git switch feature/part2-raceday-api
 cd part2
 dotnet restore RaceDay.slnx
 dotnet tool restore
@@ -173,7 +170,7 @@ The [Part 2 workflow](.github/workflows/part2-api.yml) restores, builds and test
 - Database screenshot placeholder: **capture the EF-created tables and example relationships in SSMS**.
 - Demonstration-video placeholder: **add the student's actual unlisted presentation URL**.
 
-## Part 2 AI-assistance disclosure
+## Academic integrity and AI-assistance disclosure
 
 OpenAI Codex assisted with API implementation, tests, CI configuration and documentation. AI assistance is identified in the implementation commits. The student must review, understand and adapt this work, verify the actual test/CI evidence, and explain the design independently before submission. The generated implementation is not presented as exclusively human-authored work. No passing CI image, presentation recording or video URL is invented.
 
