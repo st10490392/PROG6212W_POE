@@ -1,0 +1,70 @@
+name: Part 2 API
+
+on:
+  push:
+    branches: [feature/part2-raceday-api]
+  pull_request:
+    branches: [main, feature/part2-raceday-api]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable-tests:
+    name: Build and relational tests (SQLite)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: part2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet restore RaceDay.slnx
+      - run: dotnet build RaceDay.slnx --no-restore --configuration Release
+      - run: dotnet test RaceDay.slnx --no-build --configuration Release --logger trx --results-directory TestResults
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: portable-test-results
+          path: part2/TestResults/*.trx
+          if-no-files-found: warn
+
+  sql-server-tests:
+    name: SQL Server migrations and full API tests
+    runs-on: windows-2022
+    defaults:
+      run:
+        working-directory: part2
+        shell: pwsh
+    env:
+      RACEDAY_TEST_SQLSERVER: 'Server=(localdb)\MSSQLLocalDB;Database=master;Integrated Security=True;Encrypt=True;TrustServerCertificate=True'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Start SQL Server LocalDB (fail if unavailable)
+        run: |
+          $localDb = Get-ChildItem 'C:\Program Files\Microsoft SQL Server\*\Tools\Binn\SqlLocalDB.exe' | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $localDb) { throw 'SQL Server LocalDB is required for this job.' }
+          $instances = & $localDb.FullName info
+          if ($LASTEXITCODE -ne 0) { throw 'Could not query SQL Server LocalDB instances.' }
+          if ($instances -notcontains 'MSSQLLocalDB') {
+            & $localDb.FullName create MSSQLLocalDB
+            if ($LASTEXITCODE -ne 0) { throw 'Could not create SQL Server LocalDB instance.' }
+          }
+          & $localDb.FullName start MSSQLLocalDB
+          if ($LASTEXITCODE -ne 0) { throw 'Could not start SQL Server LocalDB.' }
+      - run: dotnet restore RaceDay.slnx
+      - run: dotnet build RaceDay.slnx --no-restore --configuration Release
+      - name: Run complete suite against real SQL Server
+        run: dotnet test RaceDay.slnx --no-build --configuration Release --logger trx --results-directory TestResults
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sql-server-test-results
+          path: part2/TestResults/*.trx
+          if-no-files-found: warn
