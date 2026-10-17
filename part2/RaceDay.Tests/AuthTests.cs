@@ -8,6 +8,20 @@ namespace RaceDay.Tests;
 
 public class AuthTests
 {
+    [Fact]
+    public async Task Session_lifetime_uses_authentication_clock_and_expires_after_30_minutes()
+    {
+        await using var app = new ApiFactory();
+        // An offset clock detects login code that incorrectly uses DateTimeOffset.UtcNow.
+        app.SessionClock.Now = DateTimeOffset.UtcNow.AddYears(1);
+        using var client = await app.Actor("Participant");
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/users/me")).StatusCode);
+        app.Clock.Now = app.Clock.Now.AddDays(2);
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/users/me")).StatusCode);
+        app.SessionClock.Now = app.SessionClock.Now.AddMinutes(31);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/users/me")).StatusCode);
+    }
+
     [Theory]
     [InlineData("Organiser")]
     [InlineData("Participant")]

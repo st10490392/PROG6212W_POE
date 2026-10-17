@@ -29,6 +29,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     private bool initialized;
     private bool cleaned;
     public TestClock Clock { get; } = new();
+    public TestClock SessionClock { get; } = new() { Now = DateTimeOffset.UtcNow };
     public bool UsesSqlServer => !string.IsNullOrWhiteSpace(sqlServer);
     public string DatabaseName { get; } = "RaceDayTests_" + Guid.NewGuid().ToString("N");
 
@@ -42,9 +43,9 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
             services.RemoveAll<IDbContextOptionsConfiguration<RaceDayDbContext>>();
             services.RemoveAll<TimeProvider>();
             services.AddSingleton<TimeProvider>(Clock);
-            // Event tests advance business time by days. Authentication uses real elapsed time.
+            // Event tests advance business time by days independently of session expiry.
             services.PostConfigure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme,
-                options => options.TimeProvider = TimeProvider.System);
+                options => options.TimeProvider = SessionClock);
             if (UsesSqlServer)
             {
                 var settings = new SqlConnectionStringBuilder(sqlServer!) { InitialCatalog = DatabaseName };
