@@ -15,7 +15,8 @@ using RaceDay.Api.Services;
 namespace RaceDay.Api.Controllers;
 
 [ApiController, Route("api/auth")]
-public class AuthController(RaceDayDbContext db, IPasswordHasher<User> hasher, PasswordTimingHash timing) : ControllerBase
+public class AuthController(RaceDayDbContext db, IPasswordHasher<User> hasher, PasswordTimingHash timing,
+    IAuthenticationSchemeProvider schemes) : ControllerBase
 {
     [HttpPost("register"), AllowAnonymous, EnableRateLimiting("auth")]
     public async Task<IActionResult> Register(RegisterRequest request)
@@ -46,17 +47,27 @@ public class AuthController(RaceDayDbContext db, IPasswordHasher<User> hasher, P
             user.PasswordHash = hasher.HashPassword(user, request.Password);
             await db.SaveChangesAsync();
         }
-        // Re-login revokes the old browser session before issuing a fresh session key.
-        if (User.Identity?.IsAuthenticated == true) await HttpContext.SignOutAsync();
+        var replacingSession = User.Identity?.IsAuthenticated == true;
+        if (replacingSession) await HttpContext.SignOutAsync();
         var principal = new ClaimsPrincipal(new ClaimsIdentity([
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new Claim(ClaimTypes.Role, user.Role), new Claim(ClaimTypes.Name, user.Email)
         ], CookieAuthenticationDefaults.AuthenticationScheme));
-        await HttpContext.SignInAsync(principal, new AuthenticationProperties
+        var properties = new AuthenticationProperties
         {
             // The cookie handler applies Program.cs's 30-minute lifetime using its own clock.
             IsPersistent = false, AllowRefresh = false
-        });
+        };
+        if (replacingSession)
+        {
+            // The request's original cookie handler retains its old key even after SignOut.
+            // A fresh framework handler sees the revoked ticket and creates a new random key.
+            var handlers = new AuthenticationHandlerProvider(schemes);
+            var handler = await handlers.GetHandlerAsync(HttpContext, CookieAuthenticationDefaults.AuthenticationScheme)
+                as IAuthenticationSignInHandler ?? throw new InvalidOperationException("Cookie sign-in handler unavailable.");
+            await handler.SignInAsync(principal, properties);
+        }
+        else await HttpContext.SignInAsync(principal, properties);
         return Ok(Responses.Profile(user));
     }
 

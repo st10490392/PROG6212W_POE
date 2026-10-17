@@ -107,8 +107,11 @@ public class AuthTests
         await client.PostAsJsonAsync("/api/auth/register", new
         { firstName = "A", lastName = "B", email, password = "Coursework-Password-42", role = "Participant" });
         var first = await client.PostAsJsonAsync("/api/auth/login", new { email, password = "Coursework-Password-42" });
+        Assert.Equal(HttpStatusCode.OK, first.StatusCode);
         var oldCookie = Assert.Single(first.Headers.GetValues("Set-Cookie")).Split(';')[0];
-        await client.PostAsJsonAsync("/api/auth/login", new { email, password = "Coursework-Password-42" });
+        var second = await client.PostAsJsonAsync("/api/auth/login", new { email, password = "Coursework-Password-42" });
+        Assert.Equal(HttpStatusCode.OK, second.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/users/me")).StatusCode);
         using var replay = app.Browser();
         replay.DefaultRequestHeaders.Add("Cookie", oldCookie);
         Assert.Equal(HttpStatusCode.Unauthorized, (await replay.GetAsync("/api/users/me")).StatusCode);

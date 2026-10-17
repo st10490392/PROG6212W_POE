@@ -17,6 +17,8 @@ public class RaceDayDbContext(DbContextOptions<RaceDayDbContext> options) : DbCo
         // SQL functions/collations differ in the relational test provider; SQL Server is the application provider.
         var sqlServer = Database.IsSqlServer();
         var utcDefault = sqlServer ? "SYSUTCDATETIME()" : "CURRENT_TIMESTAMP";
+        // SQLite stores EF decimals as text: numeric casts keep its test constraints equivalent.
+        var positiveDistance = sqlServer ? "DistanceKm > 0" : "CAST(DistanceKm AS REAL) > 0";
         var users = model.Entity<User>();
         users.ToTable("Users", t => t.HasCheckConstraint("CK_Users_Role", "Role IN ('Organiser', 'Participant')"));
         users.HasKey(x => x.UserId);
@@ -40,7 +42,7 @@ public class RaceDayDbContext(DbContextOptions<RaceDayDbContext> options) : DbCo
             new EventType { EventTypeId = 2, Name = "Walk" }, new EventType { EventTypeId = 3, Name = "Cycle" });
 
         var events = model.Entity<RaceEvent>();
-        events.ToTable("Events", t => t.HasCheckConstraint("CK_Events_Distance", "DistanceKm > 0"));
+        events.ToTable("Events", t => t.HasCheckConstraint("CK_Events_Distance", positiveDistance));
         events.HasKey(x => x.EventId);
         events.Property(x => x.Name).HasMaxLength(150).IsRequired();
         events.Property(x => x.Description).HasMaxLength(1000).IsRequired();
@@ -55,7 +57,7 @@ public class RaceDayDbContext(DbContextOptions<RaceDayDbContext> options) : DbCo
         categories.ToTable("Categories", t =>
         {
             t.HasCheckConstraint("CK_Categories_Type", "CategoryType IN ('Age', 'Distance')");
-            t.HasCheckConstraint("CK_Categories_Age", "(CategoryType = 'Age' AND MinAge IS NOT NULL AND MaxAge IS NOT NULL AND MinAge >= 0 AND MaxAge >= MinAge) OR (CategoryType = 'Distance' AND DistanceKm IS NOT NULL AND DistanceKm > 0 AND MinAge IS NULL AND MaxAge IS NULL)");
+            t.HasCheckConstraint("CK_Categories_Age", $"(CategoryType = 'Age' AND MinAge IS NOT NULL AND MaxAge IS NOT NULL AND MinAge >= 0 AND MaxAge >= MinAge) OR (CategoryType = 'Distance' AND DistanceKm IS NOT NULL AND {positiveDistance} AND MinAge IS NULL AND MaxAge IS NULL)");
         });
         categories.HasKey(x => x.CategoryId);
         categories.Property(x => x.CategoryType).HasMaxLength(20).IsRequired();
