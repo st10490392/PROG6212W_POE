@@ -6,7 +6,7 @@ namespace RaceDay.Tests;
 public class SwaggerTests
 {
     [Fact]
-    public async Task Swagger_exposes_all_24_planned_operations_and_can_share_browser_session()
+    public async Task Swagger_exposes_all_26_planned_operations_and_can_share_browser_session()
     {
         await using var app = new ApiFactory();
         using var browser = await app.Actor();
@@ -16,9 +16,11 @@ public class SwaggerTests
         var document = await ApiFactory.Json(response);
         var paths = document.GetProperty("paths");
         var operations = paths.EnumerateObject().Sum(x => x.Value.EnumerateObject().Count());
-        Assert.Equal(24, operations);
+        Assert.Equal(26, operations);
         Assert.True(paths.TryGetProperty("/api/auth/login", out _));
         Assert.True(paths.TryGetProperty("/api/users/me/results", out _));
+        Assert.True(paths.TryGetProperty("/api/events/{eventId}/banner", out _));
+        Assert.True(paths.TryGetProperty("/api/users/me/profile-picture", out _));
         Assert.Equal(HttpStatusCode.OK, (await browser.GetAsync("/api/users/me")).StatusCode);
     }
 }

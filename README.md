@@ -1,6 +1,6 @@
 # RaceDay – Programming 2B Portfolio of Evidence
 
-RaceDay is an event-management platform for South African road running, walking, and cycling events. This repository preserves the Part 1 planning artifacts and implements the Part 2 REST API in C#, ASP.NET Core, Entity Framework Core Code-First and SQL Server. The Part 3 MVC frontend is outside this implementation.
+RaceDay is an event-management platform for South African road running, walking, and cycling events. This repository preserves the Part 1 planning artifacts and implements the Part 2 REST API in C#, ASP.NET Core, Entity Framework Core Code-First and SQL Server. The Part 3 MVC frontend is implemented under `part2/RaceDay.Mvc`. It consumes the API through `RaceDayApiClient`, preserves the API session cookie in MVC session state, and provides role-specific organiser and participant workflows.
 
 ## Roles
 
@@ -205,3 +205,29 @@ Python is optional verification tooling; the application and automated integrati
 - **[PLACEHOLDER: student's narrated video URL]** A real unlisted recording in which the student demonstrates the API and explains the C# implementation, ownership checks, database constraints and test evidence.
 
 Do not include cookie values, passwords, connection secrets or real personal information in screenshots or the video. Image files are ignored by the current repository rules; deliberately add reviewed coursework screenshots with `git add -f <chosen-screenshot-path>` when ready. No placeholder is a claim that a screenshot or recording already exists.
+
+## Part 3 MVC application
+
+The final MVC frontend is in `part2/RaceDay.Mvc`. It never connects directly to SQL Server or Azure Storage:
+
+- `RaceDayApiClient` forwards the API session cookie and handles all API calls.
+- Organisers can review their dashboard, create/update/delete events, review enrolments, capture results and upload event banners.
+- Participants can browse events, enrol, view their events/results and update their profile.
+- Participants can filter event listings and upload profile pictures through the API.
+- Azure Blob Storage is configured only in the API through `AzureBlobStorage:ConnectionString`; keep the value in user secrets or an environment variable.
+
+Run the API first, then start the MVC project from `part2`:
+
+```powershell
+dotnet run --project RaceDay.Api/RaceDay.Api.csproj
+dotnet run --project RaceDay.Mvc/RaceDay.Mvc.csproj
+```
+
+For the container demonstration, run from the repository root after starting the API on a host-accessible HTTP port:
+
+```powershell
+docker build -f part2/RaceDay.Mvc/Dockerfile -t raceday-mvc:part3 .
+docker run --rm --name raceday-mvc -p 8080:8080 -e ApiSettings__BaseUrl=http://host.docker.internal:5000/ raceday-mvc:part3
+```
+
+Apply the `AddEventBannerImage` migration before testing banner uploads. Never commit a real Azure connection string.

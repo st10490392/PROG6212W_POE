@@ -1,0 +1,5 @@
+@model List<ApiEvent>
+@{ ViewData["Title"] = "Organiser hub"; }
+<p class="eyebrow">Control centre</p><h1>Good day, organiser.</h1><p class="lead text-muted">A quick view of your upcoming RaceDay.</p>
+<div class="row g-4 my-3"><div class="col-md-4"><div class="stat-card"><span>Upcoming events</span><strong>@Model.Count</strong></div></div><div class="col-md-4"><div class="stat-card"><span>Role</span><strong>Organiser</strong></div></div></div>
+<a class="btn btn-lime" asp-action="CreateEvent">Create an event</a> <a class="btn btn-outline-dark" asp-action="Events">Manage events</a>

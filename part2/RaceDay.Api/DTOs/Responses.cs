@@ -10,7 +10,7 @@ public static class Responses
         u.Phone, u.DateOfBirth, u.ProfilePictureUrl, CreatedAt = Utc(u.CreatedAt) };
     public static object Event(RaceEvent e) => new { e.EventId, e.OrganiserId, e.EventTypeId,
         EventType = e.EventType.Name, e.Name, e.Description, EventDate = Utc(e.EventDate),
-        e.Location, e.DistanceKm, CreatedAt = Utc(e.CreatedAt), Categories = e.Categories.Select(Category) };
+        e.Location, e.DistanceKm, e.BannerImageUrl, CreatedAt = Utc(e.CreatedAt), Categories = e.Categories.Select(Category) };
     public static object Category(Category c) => new { c.CategoryId, c.EventId, c.CategoryType,
         c.Name, c.MinAge, c.MaxAge, c.DistanceKm };
     public static object Enrolment(Enrolment e) => new { e.EnrolmentId, e.EventId, e.ParticipantId,

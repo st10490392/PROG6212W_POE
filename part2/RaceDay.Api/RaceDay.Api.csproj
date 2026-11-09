@@ -9,5 +9,6 @@
     <!-- Pin patched transitive packages; retain NuGet auditing and warnings-as-errors. -->
     <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.25.0" />
   </ItemGroup>
 </Project>

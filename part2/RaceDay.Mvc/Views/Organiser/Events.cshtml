@@ -1,0 +1,6 @@
+@model List<ApiEvent>
+@{ ViewData["Title"] = "Manage events"; }
+<div class="d-flex justify-content-between align-items-center mb-4"><h1>Manage events</h1><a class="btn btn-lime" asp-action="CreateEvent">+ New event</a></div>
+<div class="table-responsive panel"><table class="table align-middle"><thead><tr><th>Event</th><th>Date</th><th>Location</th><th></th></tr></thead><tbody>
+@foreach (var item in Model) { <tr><td><strong>@item.Name</strong><br /><small class="text-muted">@item.EventType</small></td><td>@item.EventDate.ToLocalTime().ToString("dd MMM yyyy")</td><td>@item.Location</td><td class="text-end"><a class="btn btn-sm btn-outline-dark" asp-action="EditEvent" asp-route-id="@item.EventId">Edit</a> <a class="btn btn-sm btn-outline-dark" asp-action="Categories" asp-route-id="@item.EventId">Categories</a> <a class="btn btn-sm btn-outline-dark" asp-action="Enrolments" asp-route-id="@item.EventId">Enrolments</a> <a class="btn btn-sm btn-dark" asp-action="Results" asp-route-id="@item.EventId">Results</a></td></tr> }
+</tbody></table></div>

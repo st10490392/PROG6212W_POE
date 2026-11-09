@@ -1,0 +1,4 @@
+@model List<ApiEnrolment>
+@{ ViewData["Title"] = "Enrolments"; var item = ViewBag.Event as ApiEvent; }
+<p class="eyebrow">Organiser hub</p><h1>@item?.Name enrolments</h1>
+<div class="panel table-responsive"><table class="table"><thead><tr><th>Participant</th><th>Category</th><th>Status</th></tr></thead><tbody>@foreach (var enrolment in Model) { <tr><td>@enrolment.ParticipantName</td><td>@enrolment.CategoryName</td><td><span class="badge status-confirmed">@enrolment.EnrolmentStatus</span></td></tr>}</tbody></table></div>

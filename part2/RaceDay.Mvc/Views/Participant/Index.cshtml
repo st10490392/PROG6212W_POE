@@ -1,0 +1,3 @@
+@model List<ApiEvent>
+@{ ViewData["Title"] = "Participant events"; }
+<p class="eyebrow">Your next adventure</p><h1>Upcoming events</h1><div class="row g-4 mt-1">@foreach (var item in Model) { <div class="col-md-6"><div class="panel h-100"><span class="badge bg-dark">@item.EventType</span><h2 class="h4 mt-3">@item.Name</h2><p class="text-muted">@item.EventDate.ToLocalTime().ToString("dd MMMM yyyy") · @item.Location</p><a class="btn btn-lime" asp-controller="Events" asp-action="Details" asp-route-id="@item.EventId">View and enrol</a></div></div>}</div>

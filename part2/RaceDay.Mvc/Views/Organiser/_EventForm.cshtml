@@ -1,0 +1,9 @@
+@model EventFormVm
+<form method="post" enctype="multipart/form-data" class="panel mt-4">@Html.AntiForgeryToken()<input asp-for="EventId" type="hidden" /><div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<label asp-for="Name"></label><input asp-for="Name" class="form-control mb-3" />
+<label asp-for="Description"></label><textarea asp-for="Description" class="form-control mb-3" rows="4"></textarea>
+<div class="row"><div class="col-md-6"><label asp-for="EventDate"></label><input asp-for="EventDate" class="form-control mb-3" /></div><div class="col-md-6"><label asp-for="DistanceKm"></label><input asp-for="DistanceKm" class="form-control mb-3" /></div></div>
+<label asp-for="Location"></label><input asp-for="Location" class="form-control mb-3" />
+<label asp-for="EventTypeId">Event type</label><select asp-for="EventTypeId" class="form-select mb-4">@foreach (var type in (List<ApiEventType>)ViewBag.EventTypes) { <option value="@type.EventTypeId">@type.Name</option> }</select>
+<label asp-for="Banner">Event banner</label><input asp-for="Banner" accept="image/*" class="form-control mb-4" />
+<button class="btn btn-lime">Save event</button> <a class="btn btn-link" asp-action="Events">Cancel</a></form>

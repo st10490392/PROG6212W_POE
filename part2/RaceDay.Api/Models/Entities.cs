@@ -38,6 +38,7 @@ public class RaceEvent
     public DateTime EventDate { get; set; }
     public string Location { get; set; } = "";
     public decimal DistanceKm { get; set; }
+    public string? BannerImageUrl { get; set; }
     public DateTime CreatedAt { get; set; }
     public List<Category> Categories { get; set; } = [];
 }

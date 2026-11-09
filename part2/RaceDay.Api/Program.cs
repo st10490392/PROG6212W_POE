@@ -19,6 +19,7 @@ builder.Services.AddDbContext<RaceDayDbContext>(options => options.UseSqlServer(
     ?? "Server=.\\SQLEXPRESS;Database=RaceDayPart2;Trusted_Connection=True;Encrypt=True;TrustServerCertificate=True"));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<AccessService>();
+builder.Services.AddScoped<BlobStorageService>();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.Configure<PasswordHasherOptions>(options => options.IterationCount = 210_000);

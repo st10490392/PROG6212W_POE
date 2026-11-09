@@ -1,0 +1,4 @@
+@model CategoryFormVm
+@{ ViewData["Title"] = "Edit category"; }
+<h1>Edit category</h1>
+<form method="post" class="panel mt-4">@Html.AntiForgeryToken()<input asp-for="EventId" type="hidden" /><input asp-for="CategoryId" type="hidden" /><label asp-for="CategoryType"></label><select asp-for="CategoryType" class="form-select mb-3"><option>Age</option><option>Distance</option></select><label asp-for="Name"></label><input asp-for="Name" class="form-control mb-3" /><div class="row"><div class="col"><label asp-for="MinAge"></label><input asp-for="MinAge" class="form-control" /></div><div class="col"><label asp-for="MaxAge"></label><input asp-for="MaxAge" class="form-control" /></div><div class="col"><label asp-for="DistanceKm"></label><input asp-for="DistanceKm" class="form-control" /></div></div><button class="btn btn-lime mt-4">Save category</button></form>

@@ -30,6 +30,7 @@ public class RaceDayDbContext(DbContextOptions<RaceDayDbContext> options) : DbCo
         users.Property(x => x.Role).HasMaxLength(20).IsRequired();
         users.Property(x => x.Phone).HasMaxLength(30);
         users.Property(x => x.ProfilePictureUrl).HasMaxLength(500);
+        model.Entity<RaceEvent>().Property(x => x.BannerImageUrl).HasMaxLength(500);
         users.Property(x => x.DateOfBirth).HasColumnType("date");
         users.Property(x => x.CreatedAt).HasColumnType("datetime2(0)").HasDefaultValueSql(utcDefault);
 

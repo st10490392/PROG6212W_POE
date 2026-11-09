@@ -1,0 +1,28 @@
+@model ApiEvent
+@{ ViewData["Title"] = Model.Name; }
+<a asp-action="Index" class="text-decoration-none">&lt;- All events</a>
+<div class="row g-5 mt-1">
+  <div class="col-lg-7">
+    @if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl)) { <img src="@Model.BannerImageUrl" class="img-fluid rounded-4 mb-4" alt="@Model.Name banner" /> }
+    <p class="eyebrow">@Model.EventType - @Model.DistanceKm km</p>
+    <h1 class="display-5 fw-bold">@Model.Name</h1>
+    <p class="lead">@Model.Description</p>
+    <p><strong>@Model.EventDate.ToLocalTime().ToString("dddd, dd MMMM yyyy - HH:mm")</strong><br />@Model.Location</p>
+  </div>
+  <div class="col-lg-5">
+    <div class="panel">
+      <h3>Choose your category</h3>
+      @foreach (var category in Model.Categories) {
+        <div class="border-bottom py-3 d-flex justify-content-between align-items-center">
+          <span>@category.Name<br /><small class="text-muted">@category.CategoryType</small></span>
+          <form asp-controller="Participant" asp-action="Enrol" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="eventId" value="@Model.EventId" />
+            <input type="hidden" name="categoryId" value="@category.CategoryId" />
+            <button class="btn btn-lime btn-sm">Enrol</button>
+          </form>
+        </div>
+      }
+    </div>
+  </div>
+</div>

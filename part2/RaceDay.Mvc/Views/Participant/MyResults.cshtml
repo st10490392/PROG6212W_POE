@@ -1,0 +1,3 @@
+@model List<ApiResult>
+@{ ViewData["Title"] = "My results"; }
+<h1>My results</h1><div class="panel table-responsive"><table class="table"><thead><tr><th>Event</th><th>Category</th><th>Position</th><th>Finish</th></tr></thead><tbody>@foreach (var item in Model) { <tr><td>@item.EventName</td><td>@item.CategoryName</td><td>@item.FinishingPosition</td><td>@item.FinishTime</td></tr>}</tbody></table></div>

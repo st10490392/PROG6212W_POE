@@ -2,7 +2,7 @@ name: Part 2 API
 
 on:
   push:
-    branches: [feature/part2-raceday-api]
+    branches: [main, feature/part2-raceday-api]
   pull_request:
     branches: [main, feature/part2-raceday-api]
   workflow_dispatch:
@@ -24,6 +24,8 @@ jobs:
           dotnet-version: '10.0.x'
       - run: dotnet restore RaceDay.slnx
       - run: dotnet build RaceDay.slnx --no-restore --configuration Release
+      - name: Build MVC frontend
+        run: dotnet build RaceDay.Mvc/RaceDay.Mvc.csproj --configuration Release
       - run: dotnet test RaceDay.slnx --no-build --configuration Release --logger trx --results-directory TestResults
       - name: Capture sanitized acceptance transcript
         run: dotnet test RaceDay.slnx --no-build --configuration Release --filter FullyQualifiedName~AcceptanceTests --logger "console;verbosity=detailed" --logger trx --results-directory TestResults/Acceptance
